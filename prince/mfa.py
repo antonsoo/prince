@@ -9,6 +9,7 @@ from typing import Any
 import altair as alt
 import numpy as np
 import pandas as pd
+import sklearn.utils
 from typing_extensions import override
 
 from prince import mca, pca, utils
@@ -54,6 +55,11 @@ class MFA(pca.PCA, collections.UserDict[Any, Any]):
             engine=engine,
         )
         collections.UserDict.__init__(self)
+
+    @override
+    def _check_input(self, X):
+        if self.check_input:
+            sklearn.utils.check_array(X, dtype=None)
 
     @override
     @utils.check_is_dataframe_input

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug fixes
+
+- MFA `transform` and `fit_transform` accept categorical groups before encoding them, matching the supported input types of `fit` and `row_coordinates`.
+
 ## 0.21.0 — 2026-09-17
 
 ### Bug fixes

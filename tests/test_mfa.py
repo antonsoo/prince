@@ -442,3 +442,20 @@ class TestMFACategorical:
         P = self.mfa.partial_correlations_
         assert F.shape == P.shape
         np.testing.assert_allclose(F.abs().values, P.abs().values, atol=1e-4)
+
+
+@pytest.mark.parametrize("method", ["transform", "fit_transform"])
+def test_transform_categorical_groups(method):
+    dataset = prince.datasets.load_poison()
+    mfa = prince.MFA(n_components=3, engine="scipy").fit(dataset)
+    expected = mfa.row_coordinates(dataset)
+    pd.testing.assert_frame_equal(getattr(mfa, method)(dataset), expected)
+
+
+@pytest.mark.parametrize("value", [np.nan, np.inf])
+def test_transform_rejects_nonfinite_numeric_input(value):
+    dataset = prince.datasets.load_premier_league().astype(float)
+    mfa = prince.MFA(n_components=3, engine="scipy").fit(dataset)
+    dataset.iloc[0, 0] = value
+    with pytest.raises(ValueError):
+        mfa.transform(dataset)
